@@ -18,7 +18,7 @@ Provide project context and coding guidelines that AI should follow when generat
 3. Why do we need it ?
 4. Real world example
 5. Exam perspective 
-6. Interview Questions 
+6. Interview Questions and answers
 7. Common Mistakes
 8. Mental Model
 9. Revision summary
@@ -29,4 +29,4 @@ Provide project context and coding guidelines that AI should follow when generat
 
 Generate content in a structured format with headings, subheadings, and bullet points. Use clear and concise language, and provide examples where applicable. Avoid unnecessary jargon and ensure that the content is applicable for technology lead or architect level understanding. Use the recommended note structure for consistency across all documentation files.
 
-Generated document should be placed under docs folder with the same name as the source file but with a .md extension. For example, if the source file is AZ-104/Domain-1.md, the generated document should be placed in docs/AZ-104/Domain-1.md.
+Show generated content in markdown format only.
