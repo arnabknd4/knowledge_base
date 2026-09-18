@@ -1,0 +1,58 @@
+# GitHub Actions Policies
+
+## 1. What is it?
+- **Policies** in GitHub Actions define rules and restrictions for how workflows run within repositories and organizations.
+- They help enforce **security, compliance, and governance** across CI/CD pipelines.
+- Examples include restricting which Actions can be used, controlling runner usage, and managing permissions.
+
+## 2. Why do we need it?
+- Prevents misuse of Actions (e.g., running untrusted code).
+- Ensures workflows adhere to organizational standards.
+- Helps manage costs by restricting runner usage.
+- Provides centralized control for large organizations.
+
+## 3. Real World Examples
+- **Allowed Actions Policy**:
+```yaml
+  policies:
+    allowed-actions: selected
+```
+- Restricts workflows to only approved Actions.
+- Workflow Permissions Policy:
+- Defines what the GITHUB_TOKEN can access.
+
+### Runner Usage Policy:
+- Restrict workflows to specific runner groups (e.g., self-hosted vs GitHub-hosted).
+
+## 4. Exam Perspective
+- Know difference between repository-level vs organization-level policies.
+- Understand allowed-actions, workflow permissions, and runner groups.
+- Be able to explain how policies enforce least privilege and secure pipelines.
+
+## 5. Interview Questions and Answers
+Q: What are GitHub Actions policies?
+A: Rules that control how workflows run, which Actions are allowed, and what permissions runners have.
+
+Q: Why are policies important?
+A: They enforce security, compliance, and governance across CI/CD pipelines.
+
+Q: How do you restrict which Actions can be used?
+A: By setting an allowed-actions policy at the org or repo level.
+
+## 6. Common Mistakes
+- Allowing all Actions → risk of running malicious code.
+- Not restricting GITHUB_TOKEN permissions → workflows may have excessive access.
+- Misconfigured runner groups → jobs run on unintended infrastructure.
+- Ignoring org-level policies → inconsistent governance across repos.
+
+## 7. Mental Model
+- Think of policies as “traffic rules for workflows”:
+- Allowed Actions = which vehicles can drive.
+- Workflow Permissions = what roads they can access.
+- Runner Groups = which lanes they must stay in.
+
+## 8. Revision Summary
+- GitHub Actions policies = governance rules for workflows.
+- Types: allowed-actions, workflow permissions, runner usage.
+- Enforce security, compliance, and cost control.
+- Best practice: apply least privilege and org-wide consistency.
