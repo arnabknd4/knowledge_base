@@ -1,0 +1,25 @@
+name: My first workflow
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  first_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./docs
+          destination: ./_site
+      
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: First step
+        run: echo 'My first step'
+
+      - name: list of files
+        run: ls
