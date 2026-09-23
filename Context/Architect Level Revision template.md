@@ -1,3 +1,5 @@
+** Important note - Give all answers in markdown format only that I can copy for my documentation purpose
+
 # [Service / Topic Name]
 
 ## 1. What is it?
@@ -28,3 +30,5 @@ Short diagram/analogy (e.g., “Think of VNets as isolated neighborhoods with co
 
 ## 8. Revision Summary
 Bullet recap (5–6 points max) — exam‑ready flashcard style.
+
+
