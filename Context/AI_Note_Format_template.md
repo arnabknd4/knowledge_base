@@ -29,9 +29,9 @@
 
 ## 2. Mental Model
 - **Analogy:** "X is like ___ because ___"
-- **Diagram / flow (ASCII or mermaid):**
+- **Text Diagram / flow :**
 
-Input → [Process] → Output
+- Input → [Process] → Output
 
 - **The one thing to remember:**
 - **Compare and contrast:**
