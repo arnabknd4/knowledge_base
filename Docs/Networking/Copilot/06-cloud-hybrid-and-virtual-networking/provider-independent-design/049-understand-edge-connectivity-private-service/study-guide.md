@@ -1,0 +1,71 @@
+# Study Guide: Objective 049
+
+> **Exact syllabus objective:** Understand edge connectivity, private service publishing/consumption, multi-cloud transit patterns, and provider-specific routing constraints when the architecture requires them.
+>
+> **Track:** Role extension · **Priority:** P3 · **Roles:** A/S
+
+**Location:** [06. Cloud, hybrid, and virtual networking](../../index.md) · **Topic:** Provider-independent design · [Source syllabus](../../../copilot-Networking-syllabus.md)
+
+## What
+
+Private service publishing and edge/multi-cloud transit cross provider and administrative boundaries with route-scale and return-path constraints. The architecture lens is **Make cloud, hybrid, overlay, and virtual paths explicit across address, route, policy, and provider boundaries**. Keep adjacent technologies in scope only where they alter this flow, trust boundary, user impact, or ownership.
+
+## Why
+
+Private connectivity may still be unavailable to a peer or create asymmetric routes. A hybrid change needs validation in both control planes and at the workload dataplane; prove the exact DNS answer, route, and return path.
+
+## How
+
+Draw the source-to-destination path; validate DNS, effective routes, inspection, return paths, address pools, provider limits, and failure ownership. Verify service semantics in the selected provider rather than relying on similar names.
+
+For this objective, use this focused procedure: Define producer/consumer identity, advertised scope, DNS, inspection, limits, failover and owner.
+
+**Decision criteria:** select the smallest change that meets the service need and least-privilege boundary. Record source, destination, protocol, environment, identity, owner, assumptions, and failure domain before changing shared networking.
+
+**Validation:** test from the real workload/client; record expected and actual result, timestamp, and vantage point. Check a negative/denied case where relevant. Correlate dataplane evidence with route, policy, DNS, host, provider, or application evidence. A control-plane success alone is not dataplane proof.
+
+## Features
+
+- **Architectural properties:** Central IPAM, intentional transit and inspection, private service paths where suitable, documented provider-specific limits, and underlay visibility.
+- **Objective-specific design note:** Publish only required service paths; don't carry all traffic through transit by default.
+- **Evidence:** choose the metric, log, flow record, packet observation, or application trace that can prove the expected behavior from this path.
+- **Failure mode to test:** distinguish intended configuration from effective forwarding/enforcement; identify the first boundary with missing evidence and its owner.
+
+## Code snippets (if any)
+
+This safe illustrative example is relevant to the objective. Use only an authorized test endpoint; read-only commands do not prove end-to-end application health.
+
+```text
+consumer-network -> published-service TCP/443; route scope explicit
+```
+
+## Do's and Don'ts
+
+**Do**
+- Define the expected flow and its service/control owner before choosing a topology, rule, or tool.
+- Confirm the result at the source and destination boundaries and preserve the evidence with the change.
+- Keep exceptions, provider-specific behavior, and rollback ownership explicit.
+
+**Don't**
+- Infer end-to-end health from a route entry, policy object, API response, or single lower-layer probe.
+- Broaden a shared route, rule, retry, or capture scope without a bounded requirement and review.
+
+## Real life implementation
+
+In a deployment or incident review, apply the quoted outcome to an owned test boundary. Use the example only against an authorized endpoint, correlate its observation with route/policy/DNS or application evidence, and record the owner, failure/rollback point, and retest result.
+
+## Q&A
+
+**Q: What proves that this objective is complete?**
+
+**A:** Pair an appropriate test with the decision record: explain the expected behavior, authoritative evidence, and limits of the probe; show how an operator would know when to stop or roll back.
+
+**Q: Which design check from this objective should be recorded?**
+
+**A:** Treat the design note above as an acceptance check. If it cannot be verified, record the residual risk, owner, and mitigation instead of assuming success.
+
+## References
+
+- [Amazon VPC: What is Amazon VPC?](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
+- [Azure Virtual Network overview](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview)
+- [Google Cloud landing zone: Decide on a network design](https://docs.cloud.google.com/architecture/landing-zones/decide-network-design)

@@ -1,5 +1,7 @@
 # Claude Certified Architect – Foundations (CCAR-F): Study Map
 
+> **Verification warning (2026-10-04):** This document's exam identity, format, question count, duration, scenario list, pass score, price, validity period, domain names, and domain weights have not been verified against a first-party Anthropic exam blueprint. Treat them as unverified notes, not official exam facts. See [Exam-syllabus-aligned.md](./Exam-syllabus-aligned.md) for the product-document alignment audit and sources.
+
 ## Exam Snapshot
 - 60 items (multiple-choice and multiple-response), 120 minutes, proctored
 - 4 scenarios presented at random from a bank of 6
