@@ -1,3 +1,5 @@
+# Kafka / Event hub architecture
+
 - Partitioning
 - sharing
 - parallelism
