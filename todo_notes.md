@@ -7,3 +7,4 @@
 - Append only logs
 - CAP theorem 
 - Distributed Consensus (Raft/Zookeeper/KRaft
+- Avro format 
