@@ -1,39 +1,49 @@
 import os
-import markdown
 from docx import Document
 from docx.shared import Pt, Inches
-from fpdf import FPDF
+from fpdf import FPDF  # fpdf2
 
 # --- CONFIG ---
-FONT_NAME = "Calibri"
+FONT_NAME_DOCX = "Calibri"   # DOCX uses Calibri
 FONT_SIZE = 10
 MARGIN = 0.5  # inches
 
 DOCX_ROOT = r"C:\Users\arnab\Desktop\Career\knowledge_base\Automation\Docx"
 PDF_ROOT = r"C:\Users\arnab\Desktop\Career\knowledge_base\Automation\PDF"
 
+# Use Arial.ttf (present on all Windows systems)
+UNICODE_FONT_PATH = r"C:\Windows\Fonts\arial.ttf"
+
 def md_to_docx(md_file, output_dir):
-    """Convert a single .md file to .docx"""
     with open(md_file, "r", encoding="utf-8") as f:
         text = f.read()
 
-    html = markdown.markdown(text)
+    lines = text.splitlines()
     doc = Document()
 
-    # Set narrow margins
     for section in doc.sections:
         section.top_margin = Inches(MARGIN)
         section.bottom_margin = Inches(MARGIN)
         section.left_margin = Inches(MARGIN)
         section.right_margin = Inches(MARGIN)
 
-    # Add content
-    p = doc.add_paragraph()
-    run = p.add_run(html)
-    run.font.name = FONT_NAME
-    run.font.size = Pt(FONT_SIZE)
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
 
-    # Save DOCX
+        if line.startswith("#"):
+            doc.add_heading(line.lstrip("#").strip(), level=1)
+        elif line.startswith("- "):
+            para = doc.add_paragraph(line[2:].strip(), style="List Bullet")
+            run = para.runs[0]; run.font.name = FONT_NAME_DOCX; run.font.size = Pt(FONT_SIZE)
+        elif line[0].isdigit() and line[1:3] == ". ":
+            para = doc.add_paragraph(line[3:].strip(), style="List Number")
+            run = para.runs[0]; run.font.name = FONT_NAME_DOCX; run.font.size = Pt(FONT_SIZE)
+        else:
+            para = doc.add_paragraph(line)
+            run = para.runs[0]; run.font.name = FONT_NAME_DOCX; run.font.size = Pt(FONT_SIZE)
+
     filename = os.path.splitext(os.path.basename(md_file))[0] + ".docx"
     out_path = os.path.join(output_dir, filename)
     doc.save(out_path)
@@ -41,25 +51,37 @@ def md_to_docx(md_file, output_dir):
 
 
 def combine_docx_to_pdf(docx_files, output_pdf):
-    """Combine multiple DOCX files into one PDF"""
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=10)
-    pdf.set_font(FONT_NAME, size=FONT_SIZE)
+
+    # Register and use Arial.ttf
+    pdf.add_font("ArialUnicode", "", UNICODE_FONT_PATH)
+    pdf.set_font("ArialUnicode", size=FONT_SIZE)
 
     for docx_file in docx_files:
         doc = Document(docx_file)
         pdf.add_page()
+        pdf.set_font("ArialUnicode", size=FONT_SIZE)
+
+        num_counter = 1
         for para in doc.paragraphs:
-            pdf.multi_cell(0, 10, para.text)
+            text = para.text.strip()
+            if not text:
+                continue
+            style = para.style.name
+            if style.startswith("List Bullet"):
+                pdf.multi_cell(0, 10, f"• {text}")  # bullet works with Arial.ttf
+            elif style.startswith("List Number"):
+                pdf.multi_cell(0, 10, f"{num_counter}. {text}")
+                num_counter += 1
+            else:
+                pdf.multi_cell(0, 10, text)
 
     pdf.output(output_pdf)
 
 
 def process_folder(md_folder):
-    """Main pipeline: MD → DOCX → PDF, preserving parent folder names"""
     parent_name = os.path.basename(md_folder.rstrip("\\/"))
-
-    # Create output subfolders
     docx_out_dir = os.path.join(DOCX_ROOT, parent_name)
     pdf_out_dir = PDF_ROOT
     os.makedirs(docx_out_dir, exist_ok=True)
@@ -73,13 +95,11 @@ def process_folder(md_folder):
                 docx_path = md_to_docx(md_path, docx_out_dir)
                 docx_files.append(docx_path)
 
-    # Combine into single PDF
     pdf_path = os.path.join(pdf_out_dir, f"{parent_name}.pdf")
     combine_docx_to_pdf(docx_files, pdf_path)
     print(f"✅ Done. PDF saved at: {pdf_path}")
 
 
-# --- RUN ---
 if __name__ == "__main__":
     md_folder = input("Enter the path to your .md folder: ").strip()
     process_folder(md_folder)
