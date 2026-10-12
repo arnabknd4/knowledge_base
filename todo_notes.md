@@ -1,5 +1,4 @@
-# Kafka / Event hub architecture
-
+Kafka / Event hub architecture - 
 - Partitioning
 - sharing
 - parallelism
@@ -8,3 +7,10 @@
 - CAP theorem 
 - Distributed Consensus (Raft/Zookeeper/KRaft
 - Avro format 
+---
+
+- multi‑cloud portability
+- hybrid governance
+- edge integration
+- compliance frameworks
+- FinOps‑driven cost control
