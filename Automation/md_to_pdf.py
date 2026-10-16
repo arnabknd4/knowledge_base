@@ -1,105 +1,109 @@
 import os
+from pathlib import Path
 from docx import Document
-from docx.shared import Pt, Inches
-from fpdf import FPDF  # fpdf2
+from docx.shared import Inches, Pt
+from docx2pdf import convert
+import pypandoc
 
-# --- CONFIG ---
-FONT_NAME_DOCX = "Calibri"   # DOCX uses Calibri
-FONT_SIZE = 10
-MARGIN = 0.5  # inches
+def ensure_pandoc_installed():
+    """Ensures pandoc is available, downloading it automatically if missing."""
+    try:
+        pypandoc.get_pandoc_version()
+    except (OSError, RuntimeError):
+        print("Pandoc binary not found. Downloading Pandoc automatically...")
+        try:
+            pypandoc.download_pandoc()
+            print("Pandoc downloaded and installed successfully!")
+        except Exception as e:
+            print(f"Failed to automatically download Pandoc: {e}")
+            print("Please install it manually via: winget install JohnMacFarlane.Pandoc")
+            exit(1)
 
-DOCX_ROOT = r"C:\Users\arnab\Desktop\Career\knowledge_base\Automation\Docx"
-PDF_ROOT = r"C:\Users\arnab\Desktop\Career\knowledge_base\Automation\PDF"
+def apply_custom_formatting(doc_path):
+    """Applies Calibri font (10pt) and 0.5-inch narrow margins to a docx file."""
+    doc = Document(doc_path)
 
-# Use Arial.ttf (present on all Windows systems)
-UNICODE_FONT_PATH = r"C:\Windows\Fonts\arial.ttf"
-
-def md_to_docx(md_file, output_dir):
-    with open(md_file, "r", encoding="utf-8") as f:
-        text = f.read()
-
-    lines = text.splitlines()
-    doc = Document()
-
+    # 1. Set margins to 0.5 inches (narrow)
     for section in doc.sections:
-        section.top_margin = Inches(MARGIN)
-        section.bottom_margin = Inches(MARGIN)
-        section.left_margin = Inches(MARGIN)
-        section.right_margin = Inches(MARGIN)
+        section.top_margin = Inches(0.5)
+        section.bottom_margin = Inches(0.5)
+        section.left_margin = Inches(0.5)
+        section.right_margin = Inches(0.5)
 
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
+    # 2. Apply font formatting to paragraphs and headings
+    for paragraph in doc.paragraphs:
+        is_heading = paragraph.style.name.startswith("Heading")
+        for run in paragraph.runs:
+            run.font.name = "Calibri"
+            run.font.size = Pt(10)
+            if is_heading:
+                run.font.bold = True
 
-        if line.startswith("#"):
-            doc.add_heading(line.lstrip("#").strip(), level=1)
-        elif line.startswith("- "):
-            para = doc.add_paragraph(line[2:].strip(), style="List Bullet")
-            run = para.runs[0]; run.font.name = FONT_NAME_DOCX; run.font.size = Pt(FONT_SIZE)
-        elif line[0].isdigit() and line[1:3] == ". ":
-            para = doc.add_paragraph(line[3:].strip(), style="List Number")
-            run = para.runs[0]; run.font.name = FONT_NAME_DOCX; run.font.size = Pt(FONT_SIZE)
-        else:
-            para = doc.add_paragraph(line)
-            run = para.runs[0]; run.font.name = FONT_NAME_DOCX; run.font.size = Pt(FONT_SIZE)
+    # 3. Apply font formatting to tables (if any exist)
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    for run in paragraph.runs:
+                        run.font.name = "Calibri"
+                        run.font.size = Pt(10)
 
-    filename = os.path.splitext(os.path.basename(md_file))[0] + ".docx"
-    out_path = os.path.join(output_dir, filename)
-    doc.save(out_path)
-    return out_path
+    doc.save(doc_path)
 
+def process_markdown_directory(root_dir_path, output_pdf_name="combined_output.pdf"):
+    # Ensure pandoc is ready before starting
+    ensure_pandoc_installed()
 
-def combine_docx_to_pdf(docx_files, output_pdf):
-    pdf = FPDF()
-    pdf.set_auto_page_break(auto=True, margin=10)
+    root_path = Path(root_dir_path)
+    if not root_path.exists():
+        print(f"Error: The directory '{root_dir_path}' does not exist.")
+        return
 
-    # Register and use Arial.ttf
-    pdf.add_font("ArialUnicode", "", UNICODE_FONT_PATH)
-    pdf.set_font("ArialUnicode", size=FONT_SIZE)
+    # Find all .md files recursively
+    md_files = sorted(list(root_path.rglob("*.md")))
+    
+    if not md_files:
+        print(f"No Markdown (.md) files found in '{root_dir_path}'.")
+        return
 
-    for docx_file in docx_files:
-        doc = Document(docx_file)
-        pdf.add_page()
-        pdf.set_font("ArialUnicode", size=FONT_SIZE)
+    print(f"Found {len(md_files)} Markdown files. Starting conversion...")
 
-        num_counter = 1
-        for para in doc.paragraphs:
-            text = para.text.strip()
-            if not text:
-                continue
-            style = para.style.name
-            if style.startswith("List Bullet"):
-                pdf.multi_cell(0, 10, f"• {text}")  # bullet works with Arial.ttf
-            elif style.startswith("List Number"):
-                pdf.multi_cell(0, 10, f"{num_counter}. {text}")
-                num_counter += 1
-            else:
-                pdf.multi_cell(0, 10, text)
+    generated_docx_files = []
 
-    pdf.output(output_pdf)
+    # Step 1, 2, 3, 5, 6: Convert each .md to .docx and apply formatting
+    for md_file in md_files:
+        docx_file = md_file.with_suffix(".docx")
+        print(f"Converting: {md_file.relative_to(root_path)} -> .docx")
+        
+        # Convert Markdown to Docx using pypandoc
+        pypandoc.convert_file(str(md_file), 'docx', outputfile=str(docx_file))
+        
+        # Apply margins, font (Calibri), and size (10)
+        apply_custom_formatting(docx_file)
+        generated_docx_files.append(docx_file)
 
+    # Step 4: Combine all generated docx files into a single master docx
+    print("Combining all .docx files into a single document...")
+    master_docx_path = root_path / "master_combined.docx"
+    
+    if generated_docx_files:
+        master_doc = Document(generated_docx_files[0])
+        
+        for docx_file in generated_docx_files[1:]:
+            master_doc.add_page_break()  # Add a page break between different files
+            sub_doc = Document(docx_file)
+            for element in sub_doc.element.body:
+                master_doc.element.body.append(element)
+                
+        master_doc.save(master_docx_path)
 
-def process_folder(md_folder):
-    parent_name = os.path.basename(md_folder.rstrip("\\/"))
-    docx_out_dir = os.path.join(DOCX_ROOT, parent_name)
-    pdf_out_dir = PDF_ROOT
-    os.makedirs(docx_out_dir, exist_ok=True)
-    os.makedirs(pdf_out_dir, exist_ok=True)
-
-    docx_files = []
-    for root, _, files in os.walk(md_folder):
-        for file in files:
-            if file.endswith(".md"):
-                md_path = os.path.join(root, file)
-                docx_path = md_to_docx(md_path, docx_out_dir)
-                docx_files.append(docx_path)
-
-    pdf_path = os.path.join(pdf_out_dir, f"{parent_name}.pdf")
-    combine_docx_to_pdf(docx_files, pdf_path)
-    print(f"✅ Done. PDF saved at: {pdf_path}")
-
+        # Convert the master docx to a single PDF
+        output_pdf_path = root_path / output_pdf_name
+        print(f"Converting combined document to PDF: {output_pdf_path}")
+        convert(str(master_docx_path), str(output_pdf_path))
+        
+        print(f"Success! Final print-ready PDF generated at:\n{output_pdf_path}")
 
 if __name__ == "__main__":
-    md_folder = input("Enter the path to your .md folder: ").strip()
-    process_folder(md_folder)
+    target_directory = input("Enter the path to the directory containing .md files: ").strip()
+    process_markdown_directory(target_directory)
