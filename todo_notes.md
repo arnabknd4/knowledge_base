@@ -17,4 +17,9 @@ Kafka / Event hub architecture -
 
 
 ---
-sharding and hashing, types of hashing 
+sharding and hashing
+- types of hashing 
+- Routing 
+- Proxies
+- HotSpot
+- Celebrity Problem
