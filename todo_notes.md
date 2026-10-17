@@ -14,3 +14,7 @@ Kafka / Event hub architecture -
 - edge integration
 - compliance frameworks
 - FinOps‑driven cost control
+
+
+---
+sharding and hashing, types of hashing 
