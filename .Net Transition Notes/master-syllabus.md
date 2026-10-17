@@ -460,6 +460,83 @@ How to read a line: tick box, topic ID and title, tags, then the concepts to cov
 
 ☐ **17.05 Offer and negotiation** [P2 R L] CTC structure (fixed, variable, PF, gratuity, stock); in-hand vs CTC calculation; notice period and buyout; counter-offers; comparing offers (total pay, growth, role content); background verification awareness; negotiation scripts
 
+## D18 JAVA AND SPRING (ARCHITECT LITERACY)
+
+☐ 18.01 JVM and Java platform for a .NET lead [P3 R L] JDK, JVM, bytecode; JIT tiers; garbage collectors (G1, ZGC, Parallel) and tuning basics; heap and metaspace; LTS release cadence (current LTS, verify); Maven and Gradle vs MSBuild and NuGet; classpath and modules; virtual threads (verify version); JVM vs CLR comparison; container memory settings; JFR and heap dump basics
+
+☐ 18.02 Java language mapped from C# [P3 R L K] classes, interfaces, records, sealed types; generics and type erasure vs reified generics; streams vs LINQ; Optional vs nullable; checked exceptions; collections; CompletableFuture vs Task; concurrency utilities; equals and hashCode; immutability; annotation-driven style
+
+☐ 18.03 Spring Boot core [P3 R L] IoC container and beans; scopes vs DI lifetimes; auto-configuration and starters; profiles and configuration properties; Actuator health and metrics; embedded server; Spring Boot vs ASP.NET Core mapping (Program.cs, filters vs middleware, options pattern); containers
+
+☐ 18.04 Spring web, security and data [P3 R L] REST controllers; validation; exception handling; Spring Security with OAuth2 resource server and JWT; method security; Spring Data JPA and Hibernate (lazy loading, N+1, entity graphs, @Transactional); Flyway or Liquibase; comparison with EF Core; testing with JUnit 5, Mockito and Testcontainers
+
+☐ 18.05 Java microservices ecosystem [P4 O] Spring Cloud and its current relevance (verify); Resilience4j; Micrometer and OpenTelemetry; Kafka clients; Quarkus and Micronaut awareness; GraalVM native image awareness; legacy Java EE migration awareness
+
+☐ 18.06 Java on Azure and AWS [P4 O] App Service and AKS for Java; Azure SDK for Java; Application Insights Java agent; Lambda for Java (SnapStart, verify); ECS and EKS; moving Java EE apps to cloud
+
+## D19 NODE.JS AND TYPESCRIPT BACKEND
+
+☐ 19.01 Node.js runtime [P3 O L] event loop phases; libuv and thread pool; streams; worker threads and clustering; npm and lockfiles; ESM vs CommonJS; Node vs .NET threading model; version support policy (verify)
+
+☐ 19.02 TypeScript API frameworks [P3 O L] Express, Fastify, NestJS (modules, providers, DI, guards, pipes); validation (zod, class-validator); OpenAPI generation; mapping to ASP.NET Core concepts
+
+☐ 19.03 Node data, testing and deployment [P4 O L] Prisma or TypeORM; connection pooling; Jest or Vitest; Docker for Node; serverless (Lambda, Azure Functions); observability; pitfalls (unhandled rejections, blocking the loop)
+
+D20 PYTHON BACKEND AND DATA PLUMBING (NO AI)
+
+☐ 20.01 Python backend for architects [P3 O L] FastAPI and Django; ASGI vs WSGI; type hints and pydantic; async; virtual environments and packaging (uv, poetry; verify); GIL and concurrency; pytest; deployment on App Service, containers and Lambda
+
+☐ 20.02 Data pipelines without AI [P4 O L] batch vs streaming; Airflow concepts; Azure Data Factory comparison; SQL and pandas pipelines; PySpark awareness; data quality checks; retries and idempotency in orchestration
+
+## D21 GO AWARENESS
+
+☐ 21.01 Go essentials [P4 O L] packages and modules; structs and interfaces; error handling; goroutines, channels, context, sync; testing and benchmarks; garbage collector basics; static binaries and small container images
+
+☐ 21.02 Go for cloud-native tooling [P4 O L] net/http and gRPC services; reading Kubernetes controller and operator code; Terraform provider awareness; CLI tools; profiling with pprof; when Go beats .NET or Java (agents, CLIs, infra tools) and when it does not
+
+## D22 AWS (SECOND CLOUD)
+
+☐ 22.01 AWS fundamentals and account design [P2 R E L] regions, AZs, edge locations; shared responsibility; AWS Organizations, OUs and accounts; Control Tower awareness; billing and Cost Explorer; CLI and CloudShell; tags; service quotas; mapping to Azure tenant, management group and subscription
+
+☐ 22.02 AWS identity and access [P2 R E L] IAM users, groups, roles and policies (identity, resource, SCP, permission boundary); policy evaluation logic; STS and role assumption; IAM Identity Center; instance profiles; OIDC federation for GitHub Actions; least privilege and Access Analyzer; mapping to Entra ID and Azure RBAC
+
+☐ 22.03 AWS networking [P2 R E L] VPC, subnets, route tables; internet and NAT gateways; security groups vs NACLs; VPC peering and Transit Gateway; PrivateLink and VPC endpoints; Route 53 routing policies; ELB (ALB, NLB, GWLB); CloudFront; VPN and Direct Connect; mapping to VNet, NSG and Front Door
+
+☐ 22.04 AWS compute [P2 R E L] EC2 (families, purchasing options, AMIs, user data) and Auto Scaling groups; Lambda (limits, concurrency, cold starts, event sources); ECS and Fargate; EKS; Elastic Beanstalk and App Runner; Windows and .NET hosting; choosing compute; mapping to VMs, App Service, Functions, AKS and Container Apps
+
+☐ 22.05 AWS storage and databases [P2 R E L] S3 (classes, lifecycle, versioning, replication, encryption, presigned URLs, Object Lock); EBS, EFS, FSx; RDS including SQL Server (Multi-AZ, read replicas, backups); Aurora; DynamoDB (keys, capacity modes, GSIs, streams); ElastiCache (Redis or Valkey, verify); DMS; mapping to Blob, Azure SQL and Cosmos DB
+
+☐ 22.06 AWS messaging and integration [P3 R E L] SQS (standard vs FIFO, visibility timeout, DLQ); SNS; EventBridge; Kinesis; MSK awareness; Step Functions; API Gateway; mapping to Service Bus, Event Grid, Event Hubs, Logic Apps and API Management
+
+☐ 22.07 AWS observability and operations [P3 R E L] CloudWatch metrics, logs, alarms and Logs Insights; X-Ray and OpenTelemetry (ADOT); CloudTrail; AWS Config; Systems Manager (Session Manager, Parameter Store, patching); Health Dashboard; mapping to Azure Monitor and Application Insights
+
+☐ 22.08 AWS security services [P3 R E L] KMS; Secrets Manager vs Parameter Store; ACM; WAF and Shield; GuardDuty; Security Hub; Inspector; Macie awareness; audit with CloudTrail and Config; encryption at rest and in transit; mapping to Key Vault and Defender for Cloud
+
+☐ 22.09 AWS DevOps and IaC [P3 R E L] CodeBuild, CodePipeline and CodeDeploy awareness; GitHub Actions and Azure DevOps deploying to AWS; ECR; CloudFormation vs CDK vs Terraform; Terraform AWS provider and remote state locking (verify current method); blue-green with ECS and CodeDeploy
+
+☐ 22.10 .NET workloads on AWS and migration [P3 R L] AWS SDK for .NET; Lambda with .NET; Windows containers on ECS; Elastic Beanstalk for .NET; IIS lift-and-shift to EC2; Application Migration Service and Migration Hub; the Rs of migration (verify); RDS for SQL Server licensing; comparison with the Azure Migrate path (12.09)
+
+☐ 22.11 AWS Well-Architected and architecture design [P3 R E L] pillars (six, verify); Well-Architected Tool; reference architectures; multi-AZ and multi-region; DR strategies (backup-restore, pilot light, warm standby, active-active); cost optimization; mapping to Azure WAF (12.10)
+
+☐ 22.12 AWS SAA-C03 blueprint and strategy [P2 R E] exam domains as currently published (verify exam code and version); labs per domain; practice assessments; time management; renewal rules (verify)
+
+☐ 22.13 AWS SAP-C02 blueprint [P4 R E] professional-level scenario reasoning (verify exam code and version); multi-account strategy; hybrid connectivity; migration; cost control; certification path after SAA
+
+☐ 22.14 Azure, AWS and GCP mapping sheet [P3 R E L] one-page comparison sheets (compute, storage, database, messaging, networking, identity, monitoring, IaC); pricing model differences; egress and inter-AZ costs; multi-cloud trade-offs; when a single cloud is the better call
+
+## D23 GCP AWARENESS
+
+☐ 23.01 GCP awareness [P4 O E] organization, folders and projects; IAM; VPC; Compute Engine; GKE; Cloud Run; Cloud SQL; BigQuery; Pub/Sub; Cloud Storage; where GCP wins (data-heavy product firms); Associate Cloud Engineer exam awareness (verify)
+
+## D24 POLYGLOT AND MARKET LITERACY
+
+☐ 24.01 Language and platform selection [P3 R L] criteria (hiring pool, runtime cost, ecosystem maturity, team skill, performance profile, licensing, support lifecycle); decision matrix; ADR for a language choice; cost of polyglot (tooling, on-call, hiring); when to say no to a new language
+
+☐ 24.02 Cross-language contracts and golden paths [P3 R L] OpenAPI and protobuf as contracts; generated clients; shared observability with OpenTelemetry; common CI templates; base images per language; shared auth libraries vs sidecars; service templates per language; contract tests (Pact)
+
+☐ 24.03 Market tracking routine [P1 R L] quarterly 30-minute check (Part 7); skill-gap log; reading job descriptions (must-have vs nice-to-have); employers by stack; certification demand; salary data hygiene (ranges and source quality, not single averages)
+
+TOTALS: 31 new topics. 21 required (full notes) and 10 optional (short notes). Required by phase: Phase 1 has 1, Phase 2 has 6, Phase 3 has 13, Phase 4 has 1. Optional by phase: 3 in Phase 3, 7 in Phase 4. At 6 notes a month this is about 5 months added to the master plan.
 
 TOTALS: 152 topics. 133 are required (full notes, about 133 printed pages) and 19 are optional (short notes, about 10 pages). Required by phase: Phase 1 has 51, Phase 2 has 54, Phase 3 has 25, Phase 4 has 3. Optional by phase: 1 in Phase 2, 6 in Phase 3, 12 in Phase 4. Printed total is about 150 pages, roughly 75 sheets printed on both sides.
 
