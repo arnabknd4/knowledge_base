@@ -23,3 +23,7 @@ sharding and hashing
 - Proxies
 - HotSpot
 - Celebrity Problem
+
+---
+
+defensible architectural decision 
