@@ -1,0 +1,167 @@
+### Lesson 1 — Architecture selection and orchestration
+
+Your answer, B — a deterministic workflow that uses Claude where language understanding or generation is needed, is correct.
+
+The important point is not simply that the process is fixed. It is that the system has clearly defined steps and business rules, so the application can control execution rather than delegating unnecessary decisions to an autonomous agent.
+
+### 1\. Why B is the right architectural choice
+
+Consider the expense-claim system from the question.
+
+The required process is:
+
+* Validate the required fields.
+
+* Check the expense policy.
+
+* Calculate the reimbursement limit.
+
+* Produce a decision report.
+
+Each step has a known purpose and a known place in the sequence. That makes a deterministic workflow a natural starting point.
+
+Expense claim received
+
+Application validates fields
+
+Required fields, types and basic constraints
+
+Policy evaluation
+
+Claude interprets ambiguous policy language if needed; application code enforces rules
+
+Application calculates reimbursement
+
+Deterministic arithmetic and business constraints
+
+Decision report
+
+Claude can explain the result in plain language
+
+This is a conceptual design, not a claim that every expense system needs Claude at each stage.
+
+The application owns the execution sequence. Claude is used only for tasks where its language capabilities add value.
+
+### Why not the other options?
+
+| Option                     | Architectural problem                                                                                            |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| A — Multi-agent            | Adds coordination and failure modes without a demonstrated need for multiple agents.                             |
+| B — Deterministic workflow | Matches the known sequence and keeps business logic under application control.                                   |
+| C — Autonomous agent       | Gives the model unnecessary freedom to choose steps that are already specified.                                  |
+| D — Single prompt          | Risks mixing interpretation, calculations, and policy enforcement without sufficient application-level controls. |
+
+Production principle: use deterministic code for deterministic rules, and use a model for tasks that benefit from model reasoning or language understanding. Model output should not replace validation of critical business decisions.
+
+### 2\. Next concept: The agent loop
+
+We now move to the next concept in Agentic Architecture & Orchestration, the highest-weight domain in the published exam blueprint.
+
+A deterministic workflow has application-controlled steps. An agentic system introduces another capability: the model can select its next action based on the information available to it.
+
+An agent loop is the repeated process through which the system receives information, selects an action, executes it, and uses the result to determine what happens next.
+
+### The core execution cycle
+
+### 1\. Observe
+
+Read the user request, context and available tool results.
+
+### 2\. Decide
+
+Claude determines whether to answer, call a tool, or take another step.
+
+### 3\. Act
+
+The application executes an authorised tool call, if requested.
+
+### 4\. Inspect the result
+
+Return the tool result to Claude so it can decide what to do next.
+
+Repeat until a stopping condition is reached.
+
+This is a conceptual model of the loop, not a literal requirement that every implementation use these four named functions.
+
+### 3\. Understand the loop through a production example
+
+Suppose a customer asks:
+
+> “Check whether my order has shipped. If it hasn't, cancel it.”
+
+The agent has access to two tools:
+
+* `get_order_status`
+
+* `cancel_order`
+
+A possible execution is:
+
+| Step | Action                            | Result                                                            |
+| ---- | --------------------------------- | ----------------------------------------------------------------- |
+| 1    | Claude requests get_order_status  | The application executes the tool.                                |
+| 2    | Tool returns the order status     | The result says processing.                                       |
+| 3    | Claude evaluates the result       | It requests cancellation.                                         |
+| 4    | Application validates the request | Checks customer identity, ownership and cancellation eligibility. |
+| 5    | Application executes cancellation | Returns success or a structured error.                            |
+| 6    | Claude responds                   | Explains the verified outcome to the customer.                    |
+
+The defining characteristic is that the next action depends on an intermediate result.
+
+The application must not simply trust the model's assertion that cancellation is permitted. It must enforce the relevant business rules before executing the side effect.
+
+### 4\. What actually controls the loop?
+
+This is an important distinction for implementation and exam questions.
+
+When building with Claude's Messages API, the response's `stop_reason` helps the application determine what happened at the end of a model turn.
+
+Common cases include:
+
+* `end_turn`: Claude has finished its turn.
+
+* `tool_use`: Claude is requesting tool execution.
+
+* `max_tokens`: The response reached its output-token limit.
+
+These are not interchangeable.
+
+For example, when Claude requests a tool, the application normally executes that tool, sends the result back to Claude, and continues the interaction. When Claude finishes its turn, the application may return the answer to the user. When the token limit is reached, the response may be incomplete and require separate handling.
+
+Do not confuse `stop_reason` with the business decision itself. It describes why the model turn stopped; it does not establish that a requested operation succeeded.
+
+A robust agent loop also needs explicit limits: maximum iterations, timeouts, error handling, and appropriate controls on tool permissions. Otherwise, the agent can repeatedly call tools, incur unnecessary cost, or fail to terminate.
+
+### 5\. Check your understanding
+
+QUESTION 2 · AGENT LOOP CONTROL
+
+Claude requests a tool call, and the application executes it. The tool returns an error indicating that the order service is temporarily unavailable. What is the best next step?
+
+A. Tell the user the order was cancelled because Claude requested the tool call.
+
+B. Pass the tool result back to Claude and let the system handle the error according to its retry and stopping policies.
+
+C. Keep repeating the tool call until it succeeds.
+
+D. Ignore the tool result and ask Claude to generate a plausible final response.
+
+Check answer
+
+### Correct.
+
+The application should preserve the actual tool outcome and return it to the model. A transient error may justify a bounded retry; repeated failures should lead to a controlled stop or escalation. The system must never claim an operation succeeded when the tool did not confirm success.
+
+### What you should retain from today's lesson
+
+You have now covered three foundational architectural decisions:
+
+* Architecture selection: choose a deterministic workflow when the process is known; use agentic orchestration when decisions depend on intermediate results.
+
+* Agent loop: a model can request tools, inspect results and select subsequent actions.
+
+* Control and reliability: application code executes tools and enforces permissions, while explicit stopping and error-handling policies prevent uncontrolled execution.
+
+Our next lesson will build on this foundation by examining sequential versus parallel orchestration and when a coordinator–subagent architecture is justified. These concepts belong directly to the exam's agentic architecture domain.
+
+One practical option: would you like ChatGPT to send you a weekly reminder to continue this certification programme and revisit the concepts you've learned? I can arrange that if you want.
